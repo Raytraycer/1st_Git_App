@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Utilities;
 using System.Runtime.InteropServices;
+using WindowsInput;
 
 namespace _1st_Git_Apl
 {
@@ -16,13 +17,13 @@ namespace _1st_Git_Apl
         globalKeyboardHook gkh = new globalKeyboardHook(); // срздаю глобальный хук для вызова хоткея, подлючив globalKeyboardHook.cs
 
         #region импортируем mouse_event():
-        // импортируем mouse_event(): 
         [DllImport("User32.dll")]
         static extern void mouse_event(MouseFlags dwFlags, int dx, int dy, int dwData, UIntPtr dwExtraInfo);
-        //для удобства использования создаем перечисление с необходимыми флагами (константами), которые определяют действия мыши: 
-        [Flags]
+
         enum MouseFlags
         {
+            //Move = 0x0001, LeftDown = 0x0002, LeftUp = 0x0004, RightDown = 0x0008,
+            //RightUp = 0x0010, Absolute = 0x8000
             Move = 0x200, LeftDown = 0x201, LeftUp = 0x202, RightDown = 0x204,
             RightUp = 0x205, Absolute = 0x8000
         };
@@ -45,9 +46,18 @@ namespace _1st_Git_Apl
 
         void gkh_KeyUp(object sender, KeyEventArgs e)
         {
-            //lstLog.Items.Add("Up\t" + e.KeyCode.ToString());
-            mouse_ClickToExportToMarket_Button();
-            
+            //lb_CurrentCursorPosition.Text=("Up\t" + e.KeyCode.ToString());
+            //string KeyUpName = e.KeyCode.ToString();
+            //mouse_ClickToExportToMarket_Button();
+            if (e.KeyCode.ToString() == "NumPad7")
+            {
+                get_MarketButtonCoordinatos();
+            }
+
+            if (e.KeyCode.ToString() == "NumPad8")
+            {
+                mouse_ClickToExportToMarket_Button();
+            }
             e.Handled = true;
         }
 
@@ -66,22 +76,37 @@ namespace _1st_Git_Apl
 
         float X_coef = 65535 / 1920; // устанавливаю глобальные коэфициенты отношений абсолютных координат к разрешению экрана. 
         float Y_coef = 65535 / 1080; // устанавливаю глобальные коэфициенты отношений абсолютных координат к разрешению экрана.
-        
+        int X_marketBtn = 0;
+        int Y_marketBtn = 0;
+
         void mouse_ClickToExportToMarket_Button()
         {
-            int x = 960;     // данные о фактических координатах кнопки в относительных координатах (в пикселях) -x
-            int y = 540;     // --//-- y
+            //int x = 960;     // данные о фактических координатах кнопки в относительных координатах (в пикселях) -x
+            //int y = 540;     // --//-- y
 
-            int Abs_X = Convert.ToInt32(x * X_coef);
-            int Abs_Y = Convert.ToInt32(y * Y_coef);
-
-            mouse_event(MouseFlags.Absolute | MouseFlags.Move, Abs_X, Abs_Y, 0, UIntPtr.Zero);
-            mouse_event(MouseFlags.Absolute | MouseFlags.RightDown, Abs_X, Abs_Y, 0, UIntPtr.Zero);
-            mouse_event(MouseFlags.Absolute | MouseFlags.RightUp, Abs_X, Abs_Y, 0, UIntPtr.Zero);
+            int Abs_X = Convert.ToInt32(X_marketBtn * X_coef);
+            int Abs_Y = Convert.ToInt32(Y_marketBtn * Y_coef);
+            Cursor.Position = new Point(X_marketBtn, Y_marketBtn);
+            mouse_event(MouseFlags.Absolute | MouseFlags.LeftDown, Abs_X, Abs_Y, 0, UIntPtr.Zero);
+            mouse_event(MouseFlags.Absolute | MouseFlags.LeftUp  , Abs_X, Abs_Y, 0, UIntPtr.Zero); 
         }
         #endregion
 
 
+        void get_MarketButtonCoordinatos()
+        {
+            X_marketBtn = Control.MousePosition.X;
+            Y_marketBtn = Control.MousePosition.Y;
+            lb_CurrentCursorPosition.Text = ("Market Btn.: X:" + X_marketBtn.ToString() + " - Y:" + Y_marketBtn.ToString());
+
+        }
+
+        
+
+        public static void DoMouseClick()
+        {
+            
+        }
 
     }
 }

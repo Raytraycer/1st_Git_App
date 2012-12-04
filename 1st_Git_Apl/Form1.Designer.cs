@@ -28,21 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.lb_CurrentCursorPosition = new System.Windows.Forms.Label();
             this.SuspendLayout();
+            // 
+            // lb_CurrentCursorPosition
+            // 
+            this.lb_CurrentCursorPosition.AutoSize = true;
+            this.lb_CurrentCursorPosition.Location = new System.Drawing.Point(13, 8);
+            this.lb_CurrentCursorPosition.Name = "lb_CurrentCursorPosition";
+            this.lb_CurrentCursorPosition.Size = new System.Drawing.Size(111, 13);
+            this.lb_CurrentCursorPosition.TabIndex = 0;
+            this.lb_CurrentCursorPosition.Text = "Waiting market coord.";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(190, 537);
+            this.ClientSize = new System.Drawing.Size(170, 537);
+            this.Controls.Add(this.lb_CurrentCursorPosition);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Label lb_CurrentCursorPosition;
     }
 }
 
